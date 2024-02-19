@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend :
+    image : amazoncorretto:17.0.10-al2023
+    ports:
+      - "8888:8888"
+
+  postgres:
+    image: postgres:13.14-alpine3.19
+    environment:
+      POSTGRES_DB: kbtg
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
