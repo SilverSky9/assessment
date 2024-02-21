@@ -7,6 +7,6 @@ import lombok.Data;
 public class CreateLotteryRequest {
 
     public String ticket;
-    public int price;
+    public Long price;
     public int amount;
 }
