@@ -21,4 +21,7 @@ public class UserTicket {
     @Column(name = "number")
     private String number;
 
+    @Column(name = "price")
+    private int price;
+
 }

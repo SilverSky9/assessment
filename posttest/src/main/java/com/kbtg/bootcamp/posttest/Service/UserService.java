@@ -4,7 +4,7 @@ import com.kbtg.bootcamp.posttest.Entity.Lottery;
 import com.kbtg.bootcamp.posttest.Entity.UserTicket;
 import com.kbtg.bootcamp.posttest.Repository.LotteryRepository;
 import com.kbtg.bootcamp.posttest.Repository.UserTicketRepository;
-import com.kbtg.bootcamp.posttest.Response.BuyLotteryResponse;
+import com.kbtg.bootcamp.posttest.Response.BuyLotteryResponseV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,23 +30,25 @@ public class UserService {
         return allLotteries;
     }
 
-    public BuyLotteryResponse buyLotteries(String userId, String ticketId) {
-        var availableTicketId = lotteryRepository.findById(Long.parseLong(ticketId)).get().getId().toString();
-        var userTicketItem = createUserTicket(availableTicketId, userId, ticketId);
-        String id = userTicketRepository.save(userTicketItem).getId().toString();
-        BuyLotteryResponse buyLotteryResponse = new BuyLotteryResponse();
-        buyLotteryResponse.setId(availableTicketId);
+    public BuyLotteryResponseV2 buyLotteries(String userId, String ticketId) {
+        var availableTicketId = lotteryRepository.findByNumber(ticketId).getNumber();
+        var userTicketItem = createUserTicket(availableTicketId, userId);
+        userTicketRepository.save(userTicketItem).getId().toString();
+
+        var userTicketByUserId = userTicketRepository.findByUserId(Long.valueOf(userId));
+        BuyLotteryResponseV2 buyLotteryResponse = new BuyLotteryResponseV2();
+        buyLotteryResponse.setTickets(userTicketByUserId.stream().map(UserTicket::getNumber).toList());
+        buyLotteryResponse.setCount(userTicketByUserId.size());
+        buyLotteryResponse.setCost(userTicketByUserId.stream().mapToInt(UserTicket::getPrice).sum());
         return buyLotteryResponse;
     }
-
-    private String findTicketId(String ticketId) {
-        return lotteryRepository.findById(Long.parseLong(ticketId)).get().getNumber();
-    }
-    private UserTicket createUserTicket(String availableTicketId, String userId, String ticketId) {
+    private UserTicket createUserTicket(String availableTicketId, String userId) {
+        Lottery lottery = lotteryRepository.findByNumber(availableTicketId);
         UserTicket userTicket = new UserTicket();
-        userTicket.setLotteryId(Long.valueOf(availableTicketId));
-        userTicket.setUserId(Long.valueOf(userId));
-        userTicket.setNumber(findTicketId(ticketId));
+        userTicket.setLotteryId(lottery.getId());
+        userTicket.setUserId(Long.parseLong(userId));
+        userTicket.setNumber(lottery.getNumber());
+        userTicket.setPrice(lottery.getPrice());
         return userTicket;
     }
 

@@ -22,7 +22,7 @@ public class Lottery {
     private Long userId;
 
     @Column(name = "price")
-    private Long price;
+    private int price;
 
     @Column(name = "amount")
     private int amount;
