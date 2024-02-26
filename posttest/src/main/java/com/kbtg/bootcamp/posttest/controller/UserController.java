@@ -1,5 +1,6 @@
 package com.kbtg.bootcamp.posttest.Controller;
 import com.kbtg.bootcamp.posttest.Response.BuyLotteryResponse;
+import com.kbtg.bootcamp.posttest.Response.BuyLotteryResponseV2;
 import com.kbtg.bootcamp.posttest.Response.Lotteries;
 import com.kbtg.bootcamp.posttest.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/lotteries/{ticketId}")
     public ResponseEntity<Lotteries> buyLotteries(@PathVariable String userId, @PathVariable String ticketId) {
-        BuyLotteryResponse response = userService.buyLotteries(userId, ticketId);
+        BuyLotteryResponseV2 response = userService.buyLotteries(userId, ticketId);
         return new ResponseEntity(response, org.springframework.http.HttpStatus.CREATED);
 
     }

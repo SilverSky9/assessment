@@ -16,7 +16,7 @@ public class AdminService {
     public CreateLotteryResponse createLottery(CreateLotteryRequest request){
        Lottery lottery = new Lottery();
        lottery.setNumber(request.getTicket());
-       lottery.setPrice(request.getPrice());
+       lottery.setPrice(Math.toIntExact(request.getPrice()));
        lottery.setAmount(request.getAmount());
        lotteryRepository.save(lottery);
 
